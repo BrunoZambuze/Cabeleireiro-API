@@ -1,5 +1,6 @@
 package com.cabeleireiro.agendamentroApi.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -32,9 +33,10 @@ public class Profissional {
 
     @Column
     @NotNull
-    private Date dataNascimento;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private Date data_nascimento;
 
     @Enumerated(EnumType.STRING)
-    private FuncaoProfissional funcaoProfissional;
+    private FuncaoProfissional funcao_profissional;
 
 }

@@ -18,20 +18,5 @@ import java.util.List;
 @RequestMapping("/profissional")
 public class ProfissionalController {
 
-    ProfissionalRepository profissionalRepository;
-
-    @GetMapping
-    public List<Profissional> listarProfissional(){
-        return profissionalRepository.findAll();
-    }
-
-    @GetMapping({"/profissionalId"})
-    public ResponseEntity<Profissional> buscarProfissional(@PathVariable Long profissionalId){
-        return profissionalRepository.findById(profissionalId)
-                .map(p -> ResponseEntity.ok(p))
-                .orElseThrow(() -> new ControllerException("Profissinal não encontrado!"));
-    }
-
-
 
 }

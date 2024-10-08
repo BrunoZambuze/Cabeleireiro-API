@@ -10,12 +10,12 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @RestControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler
+    @ExceptionHandler(ControllerException.class)
     public ResponseEntity<String> ControllerException(ControllerException e){
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 
-    @ExceptionHandler
+    @ExceptionHandler(RegraNegocioException.class)
     public ResponseEntity<String> RegraDeNegocioException(RegraNegocioException e){
         return ResponseEntity.badRequest().body(e.getMessage());
     }
