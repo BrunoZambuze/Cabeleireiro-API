@@ -73,7 +73,7 @@ public class AdministradorController {
 
     @PutMapping("/profissional/{profissinalId}")
     public ResponseEntity<Profissional> atualizar(@PathVariable Long profissinalId,
-                                          @RequestBody Profissional profissional){
+                                          @Valid @RequestBody Profissional profissional){
         return ResponseEntity.ok().body(profissionalService.atualizar(profissinalId, profissional));
     }
 

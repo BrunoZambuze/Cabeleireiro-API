@@ -2,6 +2,7 @@ package com.cabeleireiro.agendamentroApi.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -28,7 +29,7 @@ public class Profissional {
 
     @Column
     @NotBlank
-    @NotBlank
+    @Email
     private String email;
 
     @Column
@@ -37,6 +38,7 @@ public class Profissional {
     private Date data_nascimento;
 
     @Enumerated(EnumType.STRING)
+    @NotNull
     private FuncaoProfissional funcao_profissional;
 
 }

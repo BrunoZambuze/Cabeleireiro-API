@@ -38,15 +38,4 @@ public class Cliente {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date dataNascimento;
 
-    @Column
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private LocalDateTime dataAgendamento;
-
-    @Column
-    private LocalDateTime dataPrevista;
-
-    @Enumerated(EnumType.STRING)
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private StatusAgendamento statusAgendamento;
-
 }
