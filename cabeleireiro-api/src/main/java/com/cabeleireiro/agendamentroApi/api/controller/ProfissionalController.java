@@ -40,7 +40,14 @@ public class ProfissionalController {
     @PutMapping("/{clienteId}")
     public ResponseEntity<Cliente> atualizar(@PathVariable Long clienteId,
                                              @Valid @RequestBody Cliente cliente){
-        return ResponseEntity.ok(clienteService.atualizarCliente(clienteId, cliente));
+        Cliente clienteAtualizado = clienteService.atualizarCliente(clienteId, cliente);
+        return ResponseEntity.ok().body(clienteAtualizado);
+    }
+
+    @DeleteMapping("/{clienteId}")
+    public ResponseEntity<Void> remover(@PathVariable Long clienteId){
+        clienteService.removerCliente(clienteId);
+        return ResponseEntity.noContent().build();
     }
 
 }

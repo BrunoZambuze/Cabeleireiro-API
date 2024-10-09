@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @Entity
 public class Agendamento {
@@ -26,10 +27,10 @@ public class Agendamento {
 
     @Column
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private LocalDateTime dataAgendamento;
+    private OffsetDateTime dataAgendamento;
 
     @Column
-    private LocalDateTime dataPrevista;
+    private OffsetDateTime dataPrevista;
 
     @Enumerated(EnumType.STRING)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)

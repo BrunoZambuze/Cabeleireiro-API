@@ -33,4 +33,10 @@ public class ClienteService {
         return clienteRepository.save(cliente);
     }
 
+    @Transactional
+    public void removerCliente(Long id){
+        this.buscar(id);
+        clienteRepository.deleteById(id);
+    }
+
 }
