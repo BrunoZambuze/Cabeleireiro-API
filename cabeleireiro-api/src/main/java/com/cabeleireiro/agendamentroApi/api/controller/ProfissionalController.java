@@ -1,7 +1,9 @@
 package com.cabeleireiro.agendamentroApi.api.controller;
 
+import com.cabeleireiro.agendamentroApi.domain.model.Agendamento;
 import com.cabeleireiro.agendamentroApi.domain.model.Cliente;
 import com.cabeleireiro.agendamentroApi.domain.repository.ClienteRepository;
+import com.cabeleireiro.agendamentroApi.domain.service.AgendamentoService;
 import com.cabeleireiro.agendamentroApi.domain.service.ClienteService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -18,6 +20,7 @@ public class ProfissionalController {
 
     private final ClienteRepository clietClienteRepository;
     private final ClienteService clienteService;
+    private final AgendamentoService agendamentoService;
 
     @GetMapping
     public List<Cliente> listar(){
@@ -50,4 +53,10 @@ public class ProfissionalController {
         return ResponseEntity.noContent().build();
     }
 
+    @PostMapping("/agendamentos/{profisionalId}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Agendamento inserirAgendamento(@PathVariable Long profisionalId,
+                                          @Valid @RequestBody Agendamento agendamento){
+        return agendamentoService.inserirAgendamento(profisionalId, agendamento);
+    }
 }

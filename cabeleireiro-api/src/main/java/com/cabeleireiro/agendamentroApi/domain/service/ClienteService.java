@@ -13,7 +13,7 @@ public class ClienteService {
 
     private final ClienteRepository clienteRepository;
 
-    private Cliente buscar(Long id){
+    public Cliente buscar(Long id){
         return clienteRepository.findById(id)
                                 .orElseThrow(() -> new RegraNegocioException("Nenhum cliente encontrado com esse Id"));
     }
