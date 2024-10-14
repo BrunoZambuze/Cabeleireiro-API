@@ -1,5 +1,11 @@
 package com.cabeleireiro.agendamentroApi.api.controller;
 
+import com.cabeleireiro.agendamentroApi.api.assembler.AdministradorAssembler;
+import com.cabeleireiro.agendamentroApi.api.assembler.ProfissionalAssembler;
+import com.cabeleireiro.agendamentroApi.api.representationmodel.input.AdministradorDtoInput;
+import com.cabeleireiro.agendamentroApi.api.representationmodel.input.ProfissionalDtoInput;
+import com.cabeleireiro.agendamentroApi.api.representationmodel.output.AdministradorDtoOutput;
+import com.cabeleireiro.agendamentroApi.api.representationmodel.output.ProfissionalDtoOutput;
 import com.cabeleireiro.agendamentroApi.domain.exception.ControllerException;
 import com.cabeleireiro.agendamentroApi.domain.model.Administrador;
 import com.cabeleireiro.agendamentroApi.domain.model.Profissional;
@@ -21,33 +27,37 @@ import java.util.List;
 @RequestMapping("/administrador")
 public class AdministradorController {
 
-    private AdministradorRepository administradorRepository;
-    private AdministradorService administradorService;
-    private ProfissionalService profissionalService;
+    private final AdministradorRepository administradorRepository;
+    private final AdministradorService administradorService;
+    private final ProfissionalService profissionalService;
+    private final AdministradorAssembler administradorAssembler;
+    private final ProfissionalAssembler profissionalAssembler;
 
     @GetMapping
-    public List<Administrador> listar(){
-        return administradorRepository.findAll();
+    public List<AdministradorDtoOutput> listar(){
+        return administradorAssembler.toColletionAdministradorOutput(administradorRepository.findAll());
     }
 
     @GetMapping("/{administradorId}")
-    public ResponseEntity<Administrador> buscar(@PathVariable Long administradorId){
+    public ResponseEntity<AdministradorDtoOutput> buscar(@PathVariable Long administradorId){
         return administradorRepository.findById(administradorId)
+                                      .map(administradorAssembler::toAdministradorOutput)
                                       .map(a -> ResponseEntity.ok(a))
                                       .orElseThrow(() -> new ControllerException("Nenhum administrador encontrado!"));
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Administrador inserir(@Valid @RequestBody Administrador administrador){
-        return administradorService.cadastrar(administrador);
+    public AdministradorDtoOutput inserir(@Valid @RequestBody AdministradorDtoInput administradorDtoInput){
+        Administrador novoAdministrador = administradorAssembler.toEntity(administradorDtoInput);
+        return administradorAssembler.toAdministradorOutput(administradorService.cadastrar(novoAdministrador));
     }
 
     @PutMapping("/{administradorId}")
     public ResponseEntity<Administrador> atualizar(@PathVariable Long administradorId,
-                                                   @RequestBody Administrador administrador){
-        Administrador adm = administradorService.atualizar(administradorId, administrador);
-        return ResponseEntity.ok(adm);
+                                                   @RequestBody AdministradorDtoInput administradorDtoInput){
+        Administrador administradorAtualizado = administradorService.atualizar(administradorId, administradorAssembler.toEntity(administradorDtoInput));
+        return ResponseEntity.ok(administradorAtualizado);
     }
 
     @DeleteMapping("/{administradorId}")
@@ -57,24 +67,26 @@ public class AdministradorController {
 
     @PostMapping("/profissional")
     @ResponseStatus(HttpStatus.CREATED)
-    public Profissional cadastrar(@Valid @RequestBody Profissional profissional){
-        return profissionalService.cadastrarProfissional(profissional);
+    public ProfissionalDtoOutput cadastrar(@Valid @RequestBody ProfissionalDtoInput profissionalDtoInput){
+        Profissional novoProfissional = profissionalAssembler.toEntity(profissionalDtoInput);
+        return profissionalAssembler.toProffisionalOutput(profissionalService.cadastrarProfissional(novoProfissional));
     }
 
     @GetMapping("/profissional")
-    public List<Profissional> listarProfissional(){
-        return profissionalService.listar();
+    public List<ProfissionalDtoOutput> listarProfissional(){
+        return profissionalAssembler.toCollectionProfissionalOutput(profissionalService.listar());
     }
 
     @GetMapping("/profissional/{profissionalId}")
-    public ResponseEntity<Profissional> buscarProfissional(@PathVariable Long profissionalId){
-        return ResponseEntity.ok(profissionalService.buscar(profissionalId));
+    public ResponseEntity<ProfissionalDtoOutput> buscarProfissional(@PathVariable Long profissionalId){
+        return ResponseEntity.ok(profissionalAssembler.toProffisionalOutput(profissionalService.buscar(profissionalId)));
     }
 
     @PutMapping("/profissional/{profissinalId}")
-    public ResponseEntity<Profissional> atualizar(@PathVariable Long profissinalId,
-                                          @Valid @RequestBody Profissional profissional){
-        return ResponseEntity.ok().body(profissionalService.atualizar(profissinalId, profissional));
+    public ResponseEntity<ProfissionalDtoOutput> atualizar(@PathVariable Long profissinalId,
+                                          @Valid @RequestBody ProfissionalDtoInput profissionalInput){
+        Profissional profissionalAtualizado = profissionalService.atualizar(profissinalId, profissionalAssembler.toEntity(profissionalInput));
+        return ResponseEntity.ok(profissionalAssembler.toProffisionalOutput(profissionalAtualizado));
     }
 
     @DeleteMapping("/profissional/{profissinalId}")

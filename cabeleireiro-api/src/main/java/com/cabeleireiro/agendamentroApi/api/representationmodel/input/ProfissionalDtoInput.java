@@ -1,28 +1,21 @@
-package com.cabeleireiro.agendamentroApi.domain.model;
+package com.cabeleireiro.agendamentroApi.api.representationmodel.input;
 
+import com.cabeleireiro.agendamentroApi.domain.model.FuncaoProfissional;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
 
-@Entity
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Getter
 @Setter
-public class Administrador {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @EqualsAndHashCode.Include
-    private Long id;
+public class ProfissionalDtoInput {
 
     @Column
     @NotBlank
@@ -33,8 +26,13 @@ public class Administrador {
     @Email
     private String email;
 
+    @Column
     @NotNull
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private Date dataNascimento;
+    private Date data_nascimento;
+
+    @Enumerated(EnumType.STRING)
+    @NotNull
+    private FuncaoProfissional funcao_profissional;
 
 }

@@ -1,5 +1,9 @@
 package com.cabeleireiro.agendamentroApi.api.controller;
 
+import com.cabeleireiro.agendamentroApi.api.assembler.ClienteAssembler;
+import com.cabeleireiro.agendamentroApi.api.assembler.ProfissionalAssembler;
+import com.cabeleireiro.agendamentroApi.api.representationmodel.input.ClienteDtoInput;
+import com.cabeleireiro.agendamentroApi.api.representationmodel.output.ClienteDtoOutput;
 import com.cabeleireiro.agendamentroApi.domain.model.Agendamento;
 import com.cabeleireiro.agendamentroApi.domain.model.Cliente;
 import com.cabeleireiro.agendamentroApi.domain.repository.ClienteRepository;
@@ -21,30 +25,33 @@ public class ProfissionalController {
     private final ClienteRepository clietClienteRepository;
     private final ClienteService clienteService;
     private final AgendamentoService agendamentoService;
+    private final ClienteAssembler clienteAssembler;
 
     @GetMapping
-    public List<Cliente> listar(){
-        return clietClienteRepository.findAll();
+    public List<ClienteDtoOutput> listar(){
+        return clienteAssembler.toCollectionClienteOutput(clietClienteRepository.findAll());
     }
 
     @GetMapping("/{clienteId}")
-    public ResponseEntity<Cliente> buscar(@PathVariable Long clienteId){
+    public ResponseEntity<ClienteDtoOutput> buscar(@PathVariable Long clienteId){
         return clietClienteRepository.findById(clienteId)
-                .map(c -> ResponseEntity.ok(c))
+                .map(clienteAssembler::toClienteOutput)
+                .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Cliente cadastrar(@Valid @RequestBody Cliente cliente){
-        return clienteService.cadastrarCliente(cliente);
+    public ClienteDtoOutput cadastrar(@Valid @RequestBody ClienteDtoInput clienteInput){
+        Cliente novoCliente = clienteAssembler.toEntity(clienteInput);
+        return clienteAssembler.toClienteOutput(clienteService.cadastrarCliente(novoCliente));
     }
 
     @PutMapping("/{clienteId}")
-    public ResponseEntity<Cliente> atualizar(@PathVariable Long clienteId,
-                                             @Valid @RequestBody Cliente cliente){
-        Cliente clienteAtualizado = clienteService.atualizarCliente(clienteId, cliente);
-        return ResponseEntity.ok().body(clienteAtualizado);
+    public ResponseEntity<ClienteDtoOutput> atualizar(@PathVariable Long clienteId,
+                                             @Valid @RequestBody ClienteDtoInput clienteInput){
+        Cliente clienteAtualizado = clienteService.atualizarCliente(clienteId, clienteAssembler.toEntity(clienteInput));
+        return ResponseEntity.ok().body(clienteAssembler.toClienteOutput(clienteAtualizado));
     }
 
     @DeleteMapping("/{clienteId}")
