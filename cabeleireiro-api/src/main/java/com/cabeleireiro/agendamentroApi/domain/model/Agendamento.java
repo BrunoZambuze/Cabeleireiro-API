@@ -1,6 +1,7 @@
 package com.cabeleireiro.agendamentroApi.domain.model;
 
 import com.cabeleireiro.agendamentroApi.domain.validation.ValidationGroups;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
@@ -22,25 +23,24 @@ public class Agendamento {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "fk_id_cliente")
     @NotNull
-    @Valid
-    @ConvertGroup(from = Default.class, to = ValidationGroups.clienteId.class)
     public Cliente cliente;
 
     @OneToOne
     @JoinColumn(name = "fk_id_profissional")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-
     public Profissional profissional;
 
     @Column
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
     private OffsetDateTime dataAgendamento;
 
     @Column
     @NotNull
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
     private OffsetDateTime dataPrevista;
 
     @Enumerated(EnumType.STRING)

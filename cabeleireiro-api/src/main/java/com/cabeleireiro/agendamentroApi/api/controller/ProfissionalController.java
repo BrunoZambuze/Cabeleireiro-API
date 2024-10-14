@@ -60,10 +60,4 @@ public class ProfissionalController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/agendamentos/{profisionalId}")
-    @ResponseStatus(HttpStatus.CREATED)
-    public Agendamento inserirAgendamento(@PathVariable Long profisionalId,
-                                          @Valid @RequestBody Agendamento agendamento){
-        return agendamentoService.inserirAgendamento(profisionalId, agendamento);
-    }
 }

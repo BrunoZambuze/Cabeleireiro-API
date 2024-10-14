@@ -1,6 +1,7 @@
 package com.cabeleireiro.agendamentroApi.api.exceptionhandler;
 
 import com.cabeleireiro.agendamentroApi.domain.exception.ControllerException;
+import com.cabeleireiro.agendamentroApi.domain.exception.ListaVazioException;
 import com.cabeleireiro.agendamentroApi.domain.exception.RegraNegocioException;
 import lombok.AllArgsConstructor;
 import org.springframework.context.MessageSource;
@@ -53,6 +54,13 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     public ProblemDetail handleDataIntegrityViolation(DataIntegrityViolationException e){
         ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.CONFLICT);
         problemDetail.setTitle("Recurso já em uso!");
+        return problemDetail;
+    }
+
+    @ExceptionHandler(ListaVazioException.class)
+    public ProblemDetail handleListaVazio(ListaVazioException e){
+        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+        problemDetail.setTitle(e.getMessage());
         return problemDetail;
     }
 
