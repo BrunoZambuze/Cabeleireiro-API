@@ -9,10 +9,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
@@ -24,10 +22,7 @@ import java.util.List;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Getter
 @Setter
-@AllArgsConstructor
 public class Cliente {
-
-    private final AgendamentoService agendamentoService;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -60,15 +55,10 @@ public class Cliente {
         return agendamento;
     }
 
-    public void removerAgendamento(Long agendamentoId){
-        if (this.getAgendamentos().isEmpty()) {
-            throw new ListaVazioException("Cliente não possui nenhum agendamento!");
-        } else if(agendamentoService.isAgendamentoNaoExiste(agendamentoId)){
-            throw new ListaVazioException("Não foi possível encontrar o agendamento!");
-        } else if(agendamentoId == null || agendamentoId < 0){
-            throw new NullPointerException("Agendamento Id não pode ser nulo ou menor que 0!");
-        }
-        this.getAgendamentos().remove(agendamentoId);
+    public void removerAgendamento(Agendamento agendamento){
+        this.getAgendamentos().remove(agendamento); //Passei o objeto completo pois a comparação é feita através do equals/hashcode, que eu configurei
+                                                   //para comprar através do Id. Caso fosse necessário comparar somente pelo Id do tipo Long, teríamos que
+                                                  //utilizar esse código: this.getAgendamentos().removeIf(agendamento -> agendamento.getId().equals(id));
     }
 
 
